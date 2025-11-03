@@ -5,9 +5,9 @@ body{
     background: #0069d6;
 }
 
-.row{
+.row{/*made in andres 151*/
     display: flex;/*made in andres 151*/
-    justify-content: center;/*made in andres 151 */
+    justify-content: center;/*made in andres 151*/
 }
 
 .divider{

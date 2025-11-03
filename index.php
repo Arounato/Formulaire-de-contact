@@ -1,5 +1,5 @@
 <?php
-    $firstname = $name = $email = $phone = $message = "";/*Je ne comprends pas pourquoi on fait cette ligne, alors que chaque valeur ne vaut rien avant qu'elle ne soit envoyée au formulaire.*/
+    $firstname = $name = $email = $phone = $message = "";
     $firstnameError = $nameError = $emailError = $phoneError = $messageError = "";
 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
@@ -18,6 +18,20 @@
         if(empty($message)){
             $messageError = "Qu'est-ce que tu veux me dire ?";
         }
+        if(!isEmail($email)){
+            $emailError = "Tessaies de me rouler ? C'est pas un email ca !";
+        }
+        if(!isPhone($phone)){
+            $phoneError = "Que des chiffres et des espaces, stp...";
+        }
+    }
+
+    function isPhone($var){
+        return preg_match("/^[0-9 ]*$/", $var);
+    }
+
+    function isEmail($var){
+        return filter_var($var, FILTER_VALIDATE_EMAIL);
     }
 
     function verifyInput($var){
@@ -63,14 +77,14 @@
 
                             <div class="col-md-6">
                                 <label for="email">Email<span class="blue"> *</span></label>
-                                <input type="email" id="email" name="email" class="form-control" placeholder="Votre Email" value="<?php echo $email; ?>">
-                                <p class="comments"></p>
+                                <input type="text" id="email" name="email" class="form-control" placeholder="Votre Email" value="<?php echo $email; ?>">
+                                <p class="comments"><?php echo $emailError; ?></p>
                             </div>
 
                             <div class="col-md-6">
                                 <label for="phone">Téléphone</label>
                                 <input type="tel" id="phone" name="phone" class="form-control" placeholder="Votre téléphone" value="<?php echo $phone; ?>">
-                                <p class="comments"></p>
+                                <p class="comments"><?php echo $phoneError; ?></p>
                             </div>
 
                             <div class="col-md-12">
