@@ -1,6 +1,8 @@
 <?php
     $firstname = $name = $email = $phone = $message = "";
     $firstnameError = $nameError = $emailError = $phoneError = $messageError = "";
+    $isSuccess = false;
+    $emailTo = "john@apprendre-a-coder.com";
 
     if($_SERVER["REQUEST_METHOD"] == "POST"){
         $firstname = verifyInput($_POST["firstname"]);
@@ -8,21 +10,43 @@
         $email = verifyInput($_POST["email"]);
         $phone = verifyInput($_POST["phone"]);
         $message = verifyInput($_POST["message"]);
+        $isSuccess = true;
+        $emailText = "";
 
         if(empty($firstname)){
             $firstnameError = "Je veux connaitre ton prénom !";
+            $isSuccess = false;
+        }else{
+            $emailText .= "Firstname: $firstname\n";
         }
         if(empty($name)){
             $nameError = "Et oui je veux tout savoir. Même ton nom !";
-        }
-        if(empty($message)){
-            $messageError = "Qu'est-ce que tu veux me dire ?";
+            $isSuccess = false;
+        }else{
+            $emailText .= "Name: $name\n";
         }
         if(!isEmail($email)){
             $emailError = "Tessaies de me rouler ? C'est pas un email ca !";
+            $isSuccess = false;
+        }else{
+            $emailText .= "Email: $email\n";
         }
         if(!isPhone($phone)){
             $phoneError = "Que des chiffres et des espaces, stp...";
+            $isSuccess = false;
+        }else{
+            $emailText .= "Phone: $phone\n";
+        }
+        if(empty($message)){
+            $messageError = "Qu'est-ce que tu veux me dire ?";
+            $isSuccess = false;
+        }else{
+            $emailText .= "Message: $message\n";
+        }
+        if($isSuccess){
+            $headers = "From: $firstname $name <$email>\r\nReply-To: $email";
+            mail($emailTo, "Un message de votre site", $emailText, $headers);
+            $firstname = $name = $email = $phone = $message = "";
         }
     }
 
@@ -102,7 +126,7 @@
                             </div>
                         </div>
 
-                        <p class="thank-you">Votre message à bien été envoyer. Merci de m'avoir contacté :)</p>
+                        <p class="thank-you" style="display: <?php if($isSuccess) echo'block'; else echo 'none';?>">Votre message à bien été envoyer. Merci de m'avoir contacté :)</p>
 
                     </form>
                 </div>
